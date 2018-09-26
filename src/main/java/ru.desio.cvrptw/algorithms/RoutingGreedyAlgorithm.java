@@ -10,6 +10,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.abs;
+
 public class RoutingGreedyAlgorithm {
 
     private final VehicleFactory vehicleFactory;
@@ -50,7 +52,7 @@ public class RoutingGreedyAlgorithm {
 
             serveCustomers(vehicle, route);
 
-            vehicle.currentCustomer(depot);
+            vehicle.moveAndServe(depot);
             route.startServingTime().add(vehicle.currentTime());
             route.customers().add(depot);
             routes.add(route);
@@ -77,8 +79,10 @@ public class RoutingGreedyAlgorithm {
                 .filter(customer -> !visitedCustomers.contains(customer))
                 .sorted(Comparator.comparingDouble(Customer::readyTime))
                 .sorted(Comparator.comparingDouble(currentCustomer::distance))
-                .filter(customer -> vehicle.currentTime() < customer.dueDate())
-                .filter(customer -> vehicle.currentTime() + customer.serviceTime() < depot.dueDate())
+                .filter(customer -> vehicle.currentTime() + currentCustomer.distance(customer) < customer.dueDate()
+                        || abs(vehicle.currentTime() + currentCustomer.distance(customer) - customer.dueDate()) < 0.00001)
+                .filter(customer -> vehicle.currentTime() + currentCustomer.distance(customer) + customer.serviceTime() <= depot.dueDate()
+                        || abs(vehicle.currentTime() + currentCustomer.distance(customer) + customer.serviceTime() - depot.dueDate()) < 0.00001)
                 .filter(customer -> vehicle.currentCapacity() > customer.demand())
                 .findFirst()
                 .orElse(null);

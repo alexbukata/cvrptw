@@ -54,6 +54,6 @@ public class CvrptwInputReader {
 
     public static void main(String[] args) {
         CvrptwInputReader cvrptwCustomerReader = new CvrptwInputReader();
-        cvrptwCustomerReader.fromFile("C:\\Projects\\cvrptw\\src\\main\\resources\\instances\\C108.txt");
+        cvrptwCustomerReader.fromFile("C:\\Projects\\cvrptw\\src\\main\\resources\\instances\\C266.txt");
     }
 }

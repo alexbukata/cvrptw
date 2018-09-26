@@ -1,6 +1,7 @@
 package ru.desio.cvrptw.runners;
 
 import ru.desio.cvrptw.CvrptwInputReader;
+import ru.desio.cvrptw.RouteValidator;
 import ru.desio.cvrptw.VehicleFactory;
 import ru.desio.cvrptw.algorithms.RoutingGreedyAlgorithm;
 import ru.desio.cvrptw.model.InstanceInfo;
@@ -16,6 +17,7 @@ public class IteratedLocalSearchRunner {
         VehicleFactory vehicleFactory = new VehicleFactory(instanceInfo.vehiclesConstraints());
         RoutingGreedyAlgorithm routingGreedyAlgorithm = new RoutingGreedyAlgorithm(instanceInfo.customers(), vehicleFactory);
         List<Route> routes = routingGreedyAlgorithm.findGreedy();
+        RouteValidator.validateAll(instanceInfo, routes);
         System.out.println();
     }
 }

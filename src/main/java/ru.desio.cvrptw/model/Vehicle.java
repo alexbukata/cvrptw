@@ -14,6 +14,8 @@ public class Vehicle {
 
     public void moveAndServe(Customer nextCustomer) {
         currentCapacity -= nextCustomer.demand();
+        currentTime += currentCustomer.distance(nextCustomer);
         currentTime = Math.max(nextCustomer.readyTime() + nextCustomer.serviceTime(), currentTime + nextCustomer.serviceTime());
+        currentCustomer = nextCustomer;
     }
 }
