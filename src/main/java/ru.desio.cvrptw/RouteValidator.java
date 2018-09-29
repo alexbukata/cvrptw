@@ -11,7 +11,17 @@ import static java.lang.Math.abs;
 
 public class RouteValidator {
 
-    public static void validate(Route route) {
+    public static void validateAll(InstanceInfo instanceInfo, List<Route> routes) {
+        long visitedCount = routes.stream()
+                .flatMap(route -> route.customers().stream())
+                .map(Customer::id)
+                .distinct()
+                .count();
+        assert instanceInfo.customers().size() + 1 == visitedCount;
+        routes.forEach(RouteValidator::validate);
+    }
+
+    private static void validate(Route route) {
         Iterator<Customer> customerIterator = route.customers().iterator();
         Iterator<Double> timeIterator = route.startServingTime().iterator();
         Customer depot = customerIterator.next();
@@ -35,19 +45,9 @@ public class RouteValidator {
         }
     }
 
-    public static void validateAll(InstanceInfo instanceInfo, List<Route> routes) {
-        long visitedCount = routes.stream()
-                .flatMap(route -> route.customers().stream())
-                .map(Customer::id)
-                .distinct()
-                .count();
-        assert instanceInfo.customers().size() + 1 == visitedCount;
-        routes.forEach(RouteValidator::validate);
-    }
-
-    public static void assertThat(boolean bool) {
+    private static void assertThat(boolean bool) {
         if (!bool) {
-            throw new RuntimeException("FAAAALSE");
+            throw new RuntimeException("Route invalid");
         }
     }
 }
